@@ -12,6 +12,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/", handler)
 	// print to console that we are starting the webserver
-	fmt.Println("Server is starting...")
+	fmt.Println("Server is starting...123")
 	http.ListenAndServe(":8080", nil)
 }
