@@ -6,7 +6,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World! This is my first Go web app using googe cloud run.")
+	fmt.Fprintf(w, "Hello, World! This is my first Go web app using googe cloud run with Dockerfile.")
 }
 
 func main() {
