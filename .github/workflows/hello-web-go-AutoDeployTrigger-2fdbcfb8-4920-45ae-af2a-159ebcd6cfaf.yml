@@ -1,0 +1,45 @@
+name: Trigger auto deployment for hello-web-go
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/hello-web-go-AutoDeployTrigger-2fdbcfb8-4920-45ae-af2a-159ebcd6cfaf.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.HELLOWEBGO_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.HELLOWEBGO_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.HELLOWEBGO_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: aca001.azurecr.io
+          registryUsername: ${{ secrets.HELLOWEBGO_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.HELLOWEBGO_REGISTRY_PASSWORD }}
+          containerAppName: hello-web-go
+          resourceGroup: rg_aca001
+          imageToBuild: aca001.azurecr.io/hello-web-go:${{ github.sha }}
+          
+
+
